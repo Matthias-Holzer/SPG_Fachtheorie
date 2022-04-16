@@ -1,29 +1,32 @@
-﻿@using SPG_Fachtheorie.Aufgabe2.Model
-@model SPG_Fachtheorie.Aufgabe3Mvc.Views.Offers.IndexViewModel
+﻿@model IEnumerable<SPG_Fachtheorie.Aufgabe2.Model.Offer>
 
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <h1>Offers</h1>
 <table class="table table-sm">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>TeacherId</th>
-            <th>SubjectId</th>
-            <th>Subject</th>
-            <th>From</th>
-            <th>To</th>
+            <th>@Html.DisplayNameFor(x => x.Subject.Term)</th>
+            <th>@Html.DisplayNameFor(x => x.Subject.Name)</th>
+            <th>@Html.DisplayNameFor(x => x.Subject.EducationType)</th>
+            <th>@Html.DisplayNameFor(x => x.From)</th>
+            <th>@Html.DisplayNameFor(x => x.To)</th>
+            <th>@Html.DisplayNameFor(x => x.Appointments.Count)</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var s in Model.Offers)
+        @foreach (var x in Model)
         {
             <tr>
-                <td>@s.Id</td>
-                <td>@s.TeacherId</td>
-                <td>@s.SubjectId</td>
-                <td>@s.Subject</td>
-                <td>@s.From</td>
-                <td>@s.To</td>
+                <th>@Html.DisplayFor(o => x.Subject.Term)</th>
+                <th>@Html.DisplayFor(o => x.Subject.Name)</th>
+                <th>@Html.DisplayFor(o => x.Subject.EducationType)</th>
+                <th>@Html.DisplayFor(o => x.From)</th>
+                <th>@Html.DisplayFor(o => x.To)</th>
+                <th>@Html.DisplayFor(o => x.Appointments.Count)</th>
             </tr>
         }
     </tbody>

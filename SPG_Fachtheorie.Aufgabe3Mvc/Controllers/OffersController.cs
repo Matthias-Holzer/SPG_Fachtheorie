@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SPG_Fachtheorie.Aufgabe2;
+using SPG_Fachtheorie.Aufgabe2.Model;
 using SPG_Fachtheorie.Aufgabe3Mvc.Services;
-using SPG_Fachtheorie.Aufgabe3Mvc.Views.Offers;
+using System;
 using System.Linq;
 
 namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
@@ -18,13 +20,28 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             _authService = authService;
         }
 
-        [HttpGet]
+        private Guid? isCoach()
+        {
+            var student = _db.Students.FirstOrDefault(x => x.Username == _authService.Username);
+            if (student is Coach)
+                return student.Id;
+            else
+                return null;
+        }
+
+        // GET : Offers
+        [Authorize]
         public IActionResult Index()
         {
-            var offers = _db.Offers.ToList();
-            return View(new IndexViewModel(
-                 Offers: offers
-                 ));
+            Guid? coachId = isCoach();
+            if (coachId == null)
+                return Redirect("/");
+
+            var appointmentContext = _db.Offers
+                .Where(x => x.TeacherId == coachId)
+                .Include(x => x.Subject)
+                .Include(x => x.Appointments);
+            return View(appointmentContext);
         }
     }
 }
