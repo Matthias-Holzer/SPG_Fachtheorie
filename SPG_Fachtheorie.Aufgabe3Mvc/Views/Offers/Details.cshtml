@@ -19,9 +19,11 @@
         </tr>
     </thead>
     <tbody>
+        
         @foreach (var appointment in Model)
         {
-            <tr>
+            var style = appointment.State == AppointmentState.Cancelled ? "background: gray;" : "";
+            <tr style="@style">
                 <td>@Html.DisplayFor(modelItem => appointment.Student.Firstname)</td>
                 <td>@Html.DisplayFor(modelItem => appointment.Student.Lastname)</td>
                 <td>@Html.DisplayFor(modelItem => appointment.Date)</td>
