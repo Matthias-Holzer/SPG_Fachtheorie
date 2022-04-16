@@ -1,0 +1,33 @@
+﻿@using SPG_Fachtheorie.Aufgabe2.Model
+@model IEnumerable<SPG_Fachtheorie.Aufgabe2.Model.Appointment>
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(x => x.Student.Firstname)</th>
+            <th>@Html.DisplayNameFor(x => x.Student.Lastname)</th>
+            <th>@Html.DisplayNameFor(x => x.Date)</th>
+            <th>@Html.DisplayNameFor(x => x.Location)</th>
+            <th>@Html.DisplayNameFor(x => x.State)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var appointment in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => appointment.Student.Firstname)</td>
+                <td>@Html.DisplayFor(modelItem => appointment.Student.Lastname)</td>
+                <td>@Html.DisplayFor(modelItem => appointment.Date)</td>
+                <td>@Html.DisplayFor(modelItem => appointment.Location)</td>
+                <td>@Html.DisplayFor(modelItem => appointment.State)</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -30,7 +30,6 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
         }
 
         // GET : Offers
-        [Authorize]
         public IActionResult Index()
         {
             Guid? coachId = isCoach();
@@ -41,6 +40,20 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
                 .Where(x => x.TeacherId == coachId)
                 .Include(x => x.Subject)
                 .Include(x => x.Appointments);
+            return View(appointmentContext);
+        }
+
+        //GET : Offers/Details/{Guid}
+        public IActionResult Details(Guid? id)
+        {
+            if (isCoach == null)
+                return Redirect("/");
+            if (id == null)
+                return NotFound();
+
+            var appointmentContext = _db.Appointments
+                .Include(x => x.Student)
+                .Where(x => x.OfferId == id);
             return View(appointmentContext);
         }
     }
