@@ -28,6 +28,11 @@
                 <th>@Html.DisplayFor(o => x.To)</th>
                 <th>@Html.DisplayFor(o => x.Appointments.Count)</th>
             </tr>
+            <td>
+                <a asp-action="Edit" asp-route-id="@x.Id">Edit</a>
+                <a asp-action="Details" asp-route-id="@x.Id">Details</a>
+                <a asp-action="Delete" asp-route-id="@x.Id">Delete</a>
+            </td>
         }
     </tbody>
 </table>
