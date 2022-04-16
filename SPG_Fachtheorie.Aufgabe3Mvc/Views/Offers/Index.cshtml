@@ -1,59 +1,31 @@
-﻿@model IEnumerable<SPG_Fachtheorie.Aufgabe2.Model.Offer>
+﻿@using SPG_Fachtheorie.Aufgabe2.Model
+@model SPG_Fachtheorie.Aufgabe3Mvc.Views.Offers.IndexViewModel
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<h1>Offers</h1>
+<table class="table table-sm">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TeacherId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubjectId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.From)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.To)
-            </th>
-            <th></th>
+            <th>Id</th>
+            <th>TeacherId</th>
+            <th>SubjectId</th>
+            <th>Subject</th>
+            <th>From</th>
+            <th>To</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeacherId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubjectId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.From)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.To)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var s in Model.Offers)
+        {
+            <tr>
+                <td>@s.Id</td>
+                <td>@s.TeacherId</td>
+                <td>@s.SubjectId</td>
+                <td>@s.Subject</td>
+                <td>@s.From</td>
+                <td>@s.To</td>
+            </tr>
+        }
     </tbody>
 </table>
+

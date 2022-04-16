@@ -44,8 +44,9 @@ namespace SPG_Fachtheorie.Aufgabe2.Test
             var service = new AppointmentService(db);
             var offer = db.Offers.FirstOrDefault();
             var student = db.Students.FirstOrDefault();
+            var datetime = offer.From;
 
-            Assert.True(service.AskForAppointment(offer.Id, student.Id, DateTime.Now));
+            Assert.True(service.AskForAppointment(offer.Id, student.Id, datetime.AddSeconds((offer.To - offer.From).TotalSeconds/2)));
         }
         [Fact]
         public void AskForAppointmentReturnsFalseIfNoOfferExists()

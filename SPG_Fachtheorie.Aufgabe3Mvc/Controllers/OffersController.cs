@@ -1,44 +1,30 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SPG_Fachtheorie.Aufgabe2;
-using SPG_Fachtheorie.Aufgabe2.Model;
 using SPG_Fachtheorie.Aufgabe3Mvc.Services;
-using System;
+using SPG_Fachtheorie.Aufgabe3Mvc.Views.Offers;
 using System.Linq;
 
 namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
 {
     public class OffersController : Controller
     {
+        private readonly AppointmentContext _db;
         private readonly AuthService _authService;
-        private readonly AppointmentContext _appointmentContext;
 
-        public OffersController(AuthService authService, AppointmentContext appointmentContext)
+        public OffersController(AppointmentContext db, AuthService authService)
         {
+            _db = db;
             _authService = authService;
-            _appointmentContext = appointmentContext;
         }
 
-        private Guid? IsCoach()
-        {
-            var coach = _appointmentContext.Students.FirstOrDefault(x => x.Username == _authService.Username);
-            if (coach != null && coach is Coach)
-                return coach.Id;
-            return null;
-        }
-
-        // /Offers/Index
-        [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
-            Guid? coachId = IsCoach();
-
-            var context = _appointmentContext.Offers
-                .Where(x => x.TeacherId == coachId)
-                .Include(o => o.Subject)
-                .Include(o => o.Appointments);
-            return View(context);
+            var offers = _db.Offers.ToList();
+            return View(new IndexViewModel(
+                 Offers: offers
+                 ));
         }
     }
 }
