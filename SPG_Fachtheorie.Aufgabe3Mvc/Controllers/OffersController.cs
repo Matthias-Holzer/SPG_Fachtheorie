@@ -75,6 +75,16 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
         }
 
         
-        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,SubjectId,From,To")] Offer offer)
+        {
+            var coachId = IsCoach();
+            if (coachId == null)
+                return Redirect("/");
+            if (offer.To < DateTime.Now)
+                ModelState.AddModelError("To", "Can not create Offers in the past");
+
+        }
     }
 }
