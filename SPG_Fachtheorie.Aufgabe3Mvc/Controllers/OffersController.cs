@@ -59,7 +59,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             return View(appointmentContext);
         }
 
-        //POST : Offers/Add/{Guid}
+        //GET : Offers/Add
         [Authorize]
         public IActionResult Create()
         {
@@ -74,7 +74,8 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             return View();
         }
 
-        
+        // POST: Offers/Add
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SubjectId,From,To")] Offer offer)
@@ -84,6 +85,16 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
                 return Redirect("/");
             if (offer.To < DateTime.Now)
                 ModelState.AddModelError("To", "Can not create Offers in the past");
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["SubjectId"] = new SelectList(_db.Subjects.Select(x => new
+                {
+                    SubjectId = x.Id,
+                    Text = x.Term + "-" + x.Name + "-" + x.EducationType
+                }), "SubjectId", "Text");
+                return View(offer);
+            }
 
             offer.TeacherId = coachId.Value;
             offer.Id = Guid.NewGuid();
