@@ -104,7 +104,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             return RedirectToAction(nameof(Index));            
         }
 
-        //PUT: Offers/Edit/{offerGuid}
+        // GET: Offers/Edit/{offerGuid}
         [Authorize]
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -122,5 +122,33 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             return View(offer);
         }
 
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,To")] Offer offer)
+        {
+            if (IsCoach() == null)
+                return Redirect("/");
+            if (id != offer.Id)
+                return NotFound();
+            if (!ModelState.IsValid)
+                return View(offer);
+
+            var dbOffer = await _db.Offers
+                .Include(x => x.Subject)
+                .FirstOrDefaultAsync(x => x.Id == offer.Id);
+            if (dbOffer == null)
+                return NotFound();
+
+            if (offer.To < dbOffer.To)
+            {
+                ModelState.AddModelError("To", "Can not set date before saved date");
+                return View(dbOffer);
+            }
+
+            dbOffer.To = offer.To;
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
