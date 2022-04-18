@@ -85,6 +85,12 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             if (offer.To < DateTime.Now)
                 ModelState.AddModelError("To", "Can not create Offers in the past");
 
+            offer.TeacherId = coachId.Value;
+            offer.Id = Guid.NewGuid();
+
+            _db.Offers.Add(offer);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));            
         }
     }
 }
