@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SPG_Fachtheorie.Aufgabe2;
 using SPG_Fachtheorie.Aufgabe2.Model;
 using SPG_Fachtheorie.Aufgabe3Mvc.Services;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
 {
@@ -20,7 +22,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             _authService = authService;
         }
 
-        private Guid? isCoach()
+        private Guid? IsCoach()
         {
             var student = _db.Students.FirstOrDefault(x => x.Username == _authService.Username);
             if (student is Coach)
@@ -32,7 +34,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
         // GET : Offers
         public IActionResult Index()
         {
-            Guid? coachId = isCoach();
+            Guid? coachId = IsCoach();
             if (coachId == null)
                 return Redirect("/");
 
@@ -46,7 +48,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
         //GET : Offers/Details/{Guid}
         public IActionResult Details(Guid? id)
         {
-            if (isCoach == null)
+            if (IsCoach == null)
                 return Redirect("/");
             if (id == null)
                 return NotFound();
@@ -56,5 +58,23 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
                 .Where(x => x.OfferId == id);
             return View(appointmentContext);
         }
+
+        //POST : Offers/Add/{Guid}
+        [Authorize]
+        public IActionResult Create()
+        {
+            if (IsCoach == null)
+                return Redirect("/");
+            ViewData["SubjectId"] = new SelectList(_db.Subjects
+                .Select(x => new
+                {
+                    SubjectId = x.Id,
+                    Text = x.Term + " - " + x.Name + " - " + x.EducationType
+                }), "SubjectId", "Text");
+            return View();
+        }
+
+        
+        
     }
 }
