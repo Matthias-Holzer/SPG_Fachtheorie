@@ -170,5 +170,31 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
         }
 
         // POST: Offers/Delete/{offerGuid}
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            if (IsCoach() == null)
+                return Redirect("/");
+
+            var offer = await _db.Offers
+                .Include(x => x.Appointments)
+                .Include(x => x.Subject)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (offer == null)
+                return NotFound();
+
+            if (offer.Appointments.Count > 0)
+            {
+                ModelState.AddModelError("Appointments", "Offer has Appointments, can therefore not be deleted");
+                return View(offer);
+            }
+
+            _db.Offers.Remove(offer);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
