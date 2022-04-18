@@ -103,5 +103,24 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));            
         }
+
+        //PUT: Offers/Edit/{offerGuid}
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            if (IsCoach == null)
+                return Redirect("/");
+            if (id == null)
+                return NotFound();
+
+            var offer = await _db.Offers
+                .Include(x => x.Subject)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (offer == null)
+                return NotFound();
+            return View(offer);
+        }
+
     }
 }
