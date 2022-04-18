@@ -122,6 +122,7 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             return View(offer);
         }
 
+        // POST: Offers/Edit/{offerGuid}
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -150,5 +151,24 @@ namespace SPG_Fachtheorie.Aufgabe3Mvc.Controllers
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET: Offers/Delete/{offerGuid}
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (IsCoach == null)
+                return Redirect("/");
+            if (id == null)
+                return NotFound();
+            var offer = await _db.Offers
+                .Include(x => x.Appointments)
+                .Include(x => x.Subject)
+                .FirstOrDefaultAsync(o => o.Id == id);
+            if (offer == null)
+                return NotFound();
+            return View(offer);
+        }
+
+        // POST: Offers/Delete/{offerGuid}
     }
 }
